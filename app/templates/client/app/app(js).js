@@ -1,19 +1,29 @@
 'use strict';
 
 angular.module('<%= scriptAppName %>', [<%= angularModules %>])
-  <% if(filters.ngroute) { %>.config(function ($routeProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %>) {
+  <% if(filters.ngroute) { %>.config(function ($routeProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %> <% if(filters.cca) { %>, deviceProvider<% } %>) {
     $routeProvider
       .otherwise({
         redirectTo: '/'
       });
 
-    $locationProvider.html5Mode(true);<% if(filters.auth) { %>
+    <% if(filters.cca) {%>
+      if(!deviceProvider.$get().isNative()){
+        $locationProvider.html5Mode(true);
+      }
+    <% } else { %>
+    $locationProvider.html5Mode(true);<% } %><% if(filters.auth) { %>
     $httpProvider.interceptors.push('authInterceptor');<% } %>
-  })<% } %><% if(filters.uirouter) { %>.config(function ($stateProvider, $urlRouterProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %>) {
+  })<% } %><% if(filters.uirouter) { %>.config(function ($stateProvider, $urlRouterProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %> <% if(filters.cca) { %>, deviceProvider<% } %>) {
     $urlRouterProvider
       .otherwise('/');
 
-    $locationProvider.html5Mode(true);<% if(filters.auth) { %>
+    <% if(filters.cca) {%>
+    if(!deviceProvider.$get().isNative()){
+      $locationProvider.html5Mode(true);
+    }
+    <% } else { %>
+    $locationProvider.html5Mode(true);<% } %><% if(filters.auth) { %>
     $httpProvider.interceptors.push('authInterceptor');<% } %>
   })<% } %><% if(filters.auth) { %>
 

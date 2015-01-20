@@ -10,8 +10,10 @@ angular.module('<%= scriptAppName %>')
     this.NATIVE = 'native';
     this.WEB= 'web';
     this._root = document.URL;
-    if(this.apiRoot.indexOf('@echo')>-1){
+    if(deviceConfig.domain.indexOf('@echo')>-1){
       this.apiRoot='';
+    } else {
+      this.apiRoot=deviceConfig.domain;
     };
     
     this.name = function(){
