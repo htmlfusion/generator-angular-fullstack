@@ -292,16 +292,26 @@ Commit and push the resulting build, located in your dist folder:
 
 ## Mobile Chrome App
 
-[Chrome Cordova App](https://github.com/MobileChromeApps/mobile-chrome-apps) should be installed globally:
+The Chrome Mobile App template generates a project that can be deployed to the Web, Android and iOS
+using the [Chrome Mobile App](https://github.com/MobileChromeApps/mobile-chrome-apps) project.
+The project built on top of [Cordova](http://cordova.apache.org/).
+Not only is it useful to be able to deploy to many different platforms from the same
+codebase, it is also great for testing and development workflows.
+
+To start developing [cca](https://github.com/MobileChromeApps/mobile-chrome-apps) should be installed globally:
     
     npm install -g cca
 
-The native build requires the `DOMAIN` environment variable be set so that request 
-can be correctly directed the the server. This this is typically done in the 
-user's `local.env.js`.
+The native build requires the `DOMAIN` environment variable be set. This is used 
+to direct native client requests to their API backend. The environment variable is 
+typically set in the user's `local.env.js`.
 
-To prepare files run `grunt cca`. The app can be built and run from within the `cca`
-directory using all of the built in `cca` commands. After making changes to you
+To prepare your project to be built with `cca` run:
+  
+  `grunt cca`. 
+  
+The app can be built and run from within the `cca` directory using all of the 
+built in `cca` commands. After making changes to your angular project, you
 would push them to and Android device like so.
 
     grunt cca
