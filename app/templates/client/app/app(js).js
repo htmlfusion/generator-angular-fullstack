@@ -1,29 +1,19 @@
 'use strict';
 
 angular.module('<%= scriptAppName %>', [<%= angularModules %>])
-  <% if(filters.ngroute) { %>.config(function ($routeProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %> <% if(filters.cca) { %>, deviceProvider<% } %>) {
+  <% if(filters.ngroute) { %>.config(function ($routeProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %>) {
     $routeProvider
       .otherwise({
         redirectTo: '/'
       });
 
-    <% if(filters.cca) {%>
-      if(!deviceProvider.$get().isNative()){
-        $locationProvider.html5Mode(true);
-      }
-    <% } else { %>
-    $locationProvider.html5Mode(true);<% } %><% if(filters.auth) { %>
+    $locationProvider.html5Mode(true);<% if(filters.auth) { %>
     $httpProvider.interceptors.push('authInterceptor');<% } %>
-  })<% } %><% if(filters.uirouter) { %>.config(function ($stateProvider, $urlRouterProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %> <% if(filters.cca) { %>, deviceProvider<% } %>) {
+  })<% } %><% if(filters.uirouter) { %>.config(function ($stateProvider, $urlRouterProvider, $locationProvider<% if(filters.auth) { %>, $httpProvider<% } %>) {
     $urlRouterProvider
       .otherwise('/');
 
-    <% if(filters.cca) {%>
-    if(!deviceProvider.$get().isNative()){
-      $locationProvider.html5Mode(true);
-    }
-    <% } else { %>
-    $locationProvider.html5Mode(true);<% } %><% if(filters.auth) { %>
+    $locationProvider.html5Mode(true);<% if(filters.auth) { %>
     $httpProvider.interceptors.push('authInterceptor');<% } %>
   })<% } %><% if(filters.auth) { %>
 
@@ -53,9 +43,9 @@ angular.module('<%= scriptAppName %>', [<%= angularModules %>])
     };
   })
   <% if (filters.cca) { %>
-  .factory('apiInterceptor', function (device) {
+  .factory('nativeHttpInterceptor', function (device) {
     return {
-      //If its an api request and we're in phonegap convert it to an absolute url
+      //If its an api request and we're in a native context convert it to an absolute url
       request: function (config) {
         var internalURL = config.url.indexOf('/api/')>-1;
         if(internalURL && device.isNative()){
@@ -64,6 +54,9 @@ angular.module('<%= scriptAppName %>', [<%= angularModules %>])
         return config;
       }
     };
+  })
+  .config(function($httpProvider){
+    $httpProvider.interceptors.push('nativeHttpInterceptor');
   })<% } %>
   .run(function ($rootScope, $location, Auth) {
     // Redirect to login if route requires auth and you're not logged in

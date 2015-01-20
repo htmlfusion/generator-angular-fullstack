@@ -733,8 +733,7 @@ module.exports = function (grunt) {
     preprocess : {
       cca: {
         src : [ 
-        'cca/www/index.html',
-        'cca/www/components/device.js'
+        '<%%= yeoman.cca %>/www/components/device/device.service.js'
         ],
         options: {
           inline : true,
