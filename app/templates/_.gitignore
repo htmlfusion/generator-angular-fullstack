@@ -6,3 +6,15 @@ public
 client/bower_components
 dist
 /server/config/local.env.js
+
+<% if(filters.cca) { %>
+# Other cca artifacts.
+cca
+cca.cmd
+
+
+# All files accept for the manifests will be copied by grunt
+cca/www/*
+!cca/www/manifest.mobile.json
+!cca/www/manifest.json
+<% } %>

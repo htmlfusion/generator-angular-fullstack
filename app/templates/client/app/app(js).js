@@ -42,7 +42,19 @@ angular.module('<%= scriptAppName %>', [<%= angularModules %>])
       }
     };
   })
-
+  <% if (filters.cca) { %>
+  .factory('apiInterceptor', function (device) {
+    return {
+      //If its an api request and we're in phonegap convert it to an absolute url
+      request: function (config) {
+        var internalURL = config.url.indexOf('/api/')>-1;
+        if(internalURL && device.isNative()){
+          config.url = device.apiRoot+config.url;
+        }
+        return config;
+      }
+    };
+  })<% } %>
   .run(function ($rootScope, $location, Auth) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on(<% if(filters.ngroute) { %>'$routeChangeStart'<% } %><% if(filters.uirouter) { %>'$stateChangeStart'<% } %>, function (event, next) {

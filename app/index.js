@@ -79,6 +79,10 @@ var AngularFullstackGenerator = yeoman.generators.Base.extend({
           return filterMap[val];
         }
       }, {
+        type: "confirm",
+        name: "cca",
+        message: "Would you like build a Chrome Mobile App?"
+      }, {
         type: "list",
         name: "markup",
         message: "What would you like to write markup with?",
@@ -110,10 +114,11 @@ var AngularFullstackGenerator = yeoman.generators.Base.extend({
           return answers.bootstrap;
         }
       }], function (answers) {
-        this.filters[answers.script] = true;
+        this.filters[answers.cca] = answers.cca;
         this.filters[answers.markup] = true;
         this.filters[answers.stylesheet] = true;
         this.filters[answers.router] = true;
+        this.filters.cca = true;
         this.filters.bootstrap = !!answers.bootstrap;
         this.filters.uibootstrap =  !!answers.uibootstrap;
       cb();
@@ -258,8 +263,18 @@ var AngularFullstackGenerator = yeoman.generators.Base.extend({
   },
 
   end: function() {
+    var self = this;
     this.installDependencies({
-      skipInstall: this.options['skip-install']
+      skipInstall: this.options['skip-install'],
+      callback: function(){
+        //NOTE This doesn't seem the like the cleanest way to setup the Chrome Mobile App
+        if(self.filters.cca){
+          self.spawnCommand('node_modules/.bin/cca', ['create', self.appname])
+            .on('exit', function(){
+              self.spawnCommand('mv', [self.appname, 'cca']);
+            });
+        }
+      }
     });
   }
 });

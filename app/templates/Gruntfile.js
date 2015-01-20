@@ -30,7 +30,8 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       client: require('./bower.json').appPath || 'client',
-      dist: 'dist'
+      dist: 'dist'<% if(filters.cca){ %>,
+      cca: 'cca' <% } %>
     },
     express: {
       options: {
@@ -414,7 +415,33 @@ module.exports = function (grunt) {
         cwd: '<%%= yeoman.client %>',
         dest: '.tmp/',
         src: ['{app,components}/**/*.css']
-      }
+      }<% if(filters.cca) {%>,
+      cca: {
+        files: [{
+          expand: true,
+          cwd: '.tmp/images',
+          dest: '<%%= yeoman.cca%>/www/assets/images',
+          src: ['generated/*']
+        },{
+          expand: true,
+          cwd: '.tmp/',
+          dest: '<%%= yeoman.cca %>/www',
+          src: ['{app,components}/**/*.css']
+        },{
+          expand: true,
+          cwd: '<%%= yeoman.client %>',
+          dest: '<%%= yeoman.cca %>/www',
+          src: ['**','!media/**']
+        },{
+          expand: true,
+          cwd: '<%%= yeoman.app %>node_modules/socket.io-client/',
+          dest: '<%%= yeoman.cca %>/www/socket.io-client/',
+          src: ['socket.io.js'],
+          rename: function(dest, src) {
+            return dest+'socket.io.js';
+          }
+        }]
+      }<% } %>
     },
 
     buildcontrol: {
@@ -702,7 +729,22 @@ module.exports = function (grunt) {
           ]
         }
       }
-    },
+    }<% if(filters.cca) { %>,
+    preprocess : {
+      cca: {
+        src : [ 
+        'cca/www/index.html',
+        'cca/www/components/device.js'
+        ],
+        options: {
+          inline : true,
+          context: {
+            HYBRID_MODE: 'cca'
+          }
+        }
+      },
+    }
+    <% } %>
   });
 
   // Used for delaying livereload until after server has restarted
@@ -720,6 +762,19 @@ module.exports = function (grunt) {
   grunt.registerTask('express-keepalive', 'Keep grunt running', function() {
     this.async();
   });
+  
+  
+  <% if(filters.cca) { %>
+  grunt.registerTask('cca', function (target) {
+    return grunt.task.run([
+      'clean:server',
+      'env:all',
+      'sass',
+      'copy:cca',
+      'preprocess:cca'
+    ]);
+  });
+  <% } %>
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {

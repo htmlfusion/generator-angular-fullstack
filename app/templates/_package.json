@@ -8,7 +8,8 @@
     "body-parser": "~1.5.0",
     "method-override": "~1.0.0",
     "serve-favicon": "~2.0.1",
-    "cookie-parser": "~1.0.1",
+    "cookie-parser": "~1.0.1",<% if(filters.cca){ %>
+    "cca":">=0.5.*", <% } %>
     "express-session": "~1.0.2",
     "errorhandler": "~1.0.0",
     "compression": "~1.0.1",
@@ -54,7 +55,8 @@
     "grunt-usemin": "~2.1.1",
     "grunt-env": "~0.4.1",
     "grunt-node-inspector": "~0.1.5",
-    "grunt-nodemon": "~0.2.0",
+    "grunt-nodemon": "~0.2.0",<% if(filters.cca) { %>
+    "grunt-preprocess": "~4.1.0",<% } %>
     "grunt-angular-templates": "^0.5.4",
     "grunt-dom-munger": "^3.4.0",
     "grunt-protractor-runner": "^1.1.0",
