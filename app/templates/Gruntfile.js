@@ -742,8 +742,15 @@ module.exports = function (grunt) {
           }
         }
       },
-    }
-    <% } %>
+    },
+    minifyHtml: {
+      cca: {
+        files: {
+          '<%%= yeoman.cca %>/www/index.html':
+          '<%%= yeoman.cca %>/www/index.html'
+        }
+      }
+    }<% } %>
   });
 
   // Used for delaying livereload until after server has restarted
@@ -770,7 +777,8 @@ module.exports = function (grunt) {
       'env:all',
       'sass',
       'copy:cca',
-      'preprocess:cca'
+      'preprocess:cca',
+      'minifyHtml:cca'
     ]);
   });
   <% } %>
